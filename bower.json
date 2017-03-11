@@ -1,0 +1,19 @@
+{
+  "name": "automatic-octo-carnival",
+  "version": "0.0.1-SNAPSHOT",
+  "homepage": "https://github.com/jumpingElephant/automatic-octo-carnival",
+  "author": "jumpingElephant",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": ">= 1.9.0",
+    "bootstrap": ">= v3.3.1",
+    "tether": "^1.4.0"
+  }
+}
