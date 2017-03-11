@@ -12,6 +12,7 @@
 
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/uikit/dist/css/uikit.css" />
     <!-- endbower -->
     <link rel="stylesheet" type="text/css" href="assets/css/styles.css" />
 </head>
@@ -39,11 +40,45 @@
         </div>
     </div>
 
+    <div class="container">
+        <!-- Example row of columns -->
+        <table class="uk-table uk-table-striped uk-table-hover">
+            <caption>cap</caption>
+            <thead>
+                <tr>
+                    <th>Datum</th>
+                    <th>Kilometerstand</th>
+                    <th>Kosten</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="uk-table-link"><a class="uk-link-reset" onclick="console.log('row 1')">01.01.2017</a></td>
+                    <td class="uk-table-link"><a class="uk-link-reset" onclick="console.log('row 1')">42 km</a></td>
+                    <td class="uk-table-link"><a class="uk-link-reset" onclick="console.log('row 1')">42 €</a></td>
+                </tr>
+                <tr>
+                    <td class="uk-table-link"><a class="uk-link-reset" onclick="console.log('row 2')">02.01.2017</a></td>
+                    <td class="uk-table-link"><a class="uk-link-reset" onclick="console.log('row 2')">43 km</a></td>
+                    <td class="uk-table-link"><a class="uk-link-reset" onclick="console.log('row 2')">43 €</a></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <hr>
+
+        <footer>
+            <p>&copy; jumpingElephant 2017</p>
+        </footer>
+    </div>
+
     <!-- Load scripts -->
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/tether/dist/js/tether.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/uikit/dist/js/uikit.js"></script>
+    <script src="bower_components/uikit/dist/js/uikit-icons.js"></script>
     <!-- endbower -->
     <script type="text/javascript" src="assets/js/libs.js"></script>
 </body>
