@@ -1,0 +1,19 @@
+{
+  "name": "psychic-octo-giggle",
+  "version": "0.0.0",
+  "homepage": "https://github.com/jumpingElephant/psychic-octo-giggle",
+  "author": "jumpingElephant",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": ">= 1.9.0",
+    "bootstrap": ">= v3.3.1",
+    "tether": "^1.4.0"
+  }
+}
