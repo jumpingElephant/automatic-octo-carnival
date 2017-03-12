@@ -5,11 +5,24 @@
   $(function() {
     console.log('it works');
 
-    var template = $('#consumption-row-template').html();
     var consumptionTable = $('#consumption-table');
-    for (var i = 0; i < 3; i++) {
-      consumptionTable.append(template);
-    }
+    var source = $("#consumption-row-template").html();
+    var template = Handlebars.compile(source);
+
+    var data = {
+      bills: [{
+        index: 1,
+        date: "01.01.2017",
+        mileage: 42000,
+        totalPrice: 42
+      }, {
+        index: 2,
+        date: "01.01.2017",
+        mileage: 42000,
+        totalPrice: 42
+      }]
+    };
+    consumptionTable.append(template(data));
 
   });
 

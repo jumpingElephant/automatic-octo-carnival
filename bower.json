@@ -12,9 +12,9 @@
     "tests"
   ],
   "dependencies": {
-    "jquery": ">= 1.9.0",
-    "bootstrap": ">= v3.3.1",
+    "jquery": "^3.1.1",
+    "bootstrap": "v4.0.0-alpha.6",
     "tether": "^1.4.0",
-    "uikit": "^3.0.0"
+    "handlebars": "^4.0.5"
   }
 }
