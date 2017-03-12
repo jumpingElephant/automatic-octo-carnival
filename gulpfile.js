@@ -1,48 +1,53 @@
 // include gulp
-var gulp = require('gulp'); 
- 
+var gulp = require('gulp');
+
 // include plug-ins
 var jshint = require('gulp-jshint'),
-    changed = require('gulp-changed'),
-    imagemin = require('gulp-imagemin'),
-    concat = require('gulp-concat'),
-    stripDebug = require('gulp-strip-debug'),
-    uglify = require('gulp-uglify'),
-    autoprefix = require('gulp-autoprefixer'),
-    minifyCSS = require('gulp-minify-css'),
-    rimraf = require('gulp-rimraf'),
-    browserSync = require("browser-sync"),
-    wiredep = require('wiredep').stream,
-    path = require('path');
+  changed = require('gulp-changed'),
+  imagemin = require('gulp-imagemin'),
+  concat = require('gulp-concat'),
+  stripDebug = require('gulp-strip-debug'),
+  uglify = require('gulp-uglify'),
+  autoprefix = require('gulp-autoprefixer'),
+  minifyCSS = require('gulp-minify-css'),
+  rimraf = require('gulp-rimraf'),
+  browserSync = require("browser-sync"),
+  wiredep = require('wiredep').stream,
+  path = require('path'),
+  url = require('url'),
+  proxy = require('proxy-middleware');
 
 var request = require('request');
 var fs = require('fs');
 
 //Sources
-  var htmlSrc = 'assets/*.html',
-      htmlDst = 'assets';
-  var imgSrc  = 'src/img/**/*',
-      imgDst  = 'assets/img';
-  var jsSrc   = ['libs/*.js', 'src/js/libs/*.js','src/js/*.js'],
-      jsDst   = 'assets/js/';
-  var cssSrc  = ['libs/*.css', 'src/css/libs/*.css', 'src/css/**/*.css', 'src/css/*.css'],
-      cssDst  = './assets/css/';
-  var fontSrc  = 'src/fonts/*',
-      fontDst  = './assets/fonts/';
+var htmlSrc = 'assets/*.html',
+  htmlDst = 'assets';
+var imgSrc = 'src/img/**/*',
+  imgDst = 'assets/img';
+var jsSrc = ['libs/*.js', 'src/js/libs/*.js', 'src/js/*.js'],
+  jsDst = 'assets/js/';
+var cssSrc = ['libs/*.css', 'src/css/libs/*.css', 'src/css/**/*.css', 'src/css/*.css'],
+  cssDst = './assets/css/';
+var fontSrc = 'src/fonts/*',
+  fontDst = './assets/fonts/';
 
-  var bowerDest = 'libs';
+var bowerDest = 'libs';
 
 /*Connecting BrowserSync ...*/
 var server = {
-  start: function(){
-     browserSync({
-        server: {
-            baseDir: "./"
-        }
+  start: function() {
+    var proxyOptions = url.parse('http://localhost:8012/rest');
+    proxyOptions.route = '/rest';
+
+    browserSync({
+      server: {
+        baseDir: "./",
+        middleware: [proxy(proxyOptions)]
+      }
     });
   }
 }
-
 
 /* Bower */
 /* 
@@ -50,12 +55,11 @@ Comannds:
   $ bower install --save plugin-name
   $ gulp bower
 */
-gulp.task('bower', function () {
+gulp.task('bower', function() {
   gulp.src('./*.html')
     .pipe(wiredep())
     .pipe(gulp.dest('./'));
 });
-
 
 //Fonts
 gulp.task('fonts', function() {
@@ -63,38 +67,36 @@ gulp.task('fonts', function() {
     .pipe(gulp.dest(fontDst));
 });
 
-
 /*
 ================================
       Gulp development
 ================================
 */
 
-
 // CSS concat, auto-prefix and minify
 gulp.task('styles-dev', function() {
- return gulp.src(cssSrc)
+  return gulp.src(cssSrc)
     .pipe(concat('styles.css'))
     .pipe(gulp.dest(cssDst));
 });
 
 // JS hint task
 gulp.task('jshint', function() {
- return gulp.src('src/js/')
+  return gulp.src('src/js/')
     .pipe(jshint())
     .pipe(jshint.reporter('default'));
 });
 
 // JS concat, strip debugging and minify
 gulp.task('scripts-dev', function() {
- return gulp.src(jsSrc)
+  return gulp.src(jsSrc)
     .pipe(concat('libs.js'))
     .pipe(gulp.dest(jsDst));
 });
 
 //Minify images
 gulp.task('imagemin-dev', function() {
- return gulp.src(imgSrc)
+  return gulp.src(imgSrc)
     .pipe(changed(imgDst))
     .pipe(gulp.dest(imgDst));
 });
@@ -107,7 +109,7 @@ gulp.task('imagemin-dev', function() {
 
 // Deletes the assets folder
 gulp.task('clean', function(cb) {
-   return gulp.src('./assets')
+  return gulp.src('./assets')
     .pipe(rimraf({ force: true }));
 });
 
@@ -131,37 +133,35 @@ gulp.task('scripts-prod', function() {
 
 //Minify images
 gulp.task('imagemin-prod', function() {
- return gulp.src(imgSrc)
+  return gulp.src(imgSrc)
     .pipe(changed(imgDst))
     .pipe(imagemin())
     .pipe(gulp.dest(imgDst));
 });
 
-
-
 // Development task
 gulp.task('default', ['styles-dev', 'jshint', 'scripts-dev', 'imagemin-dev', 'fonts'], function() {
   server.start();
 
-    // watch for JS changes
-    gulp.watch(jsSrc, ['scripts-dev', 'jshint', browserSync.reload]);
-   
-    // watch for CSS changes
-    gulp.watch(cssSrc, ['styles-dev', browserSync.reload]);
+  // watch for JS changes
+  gulp.watch(jsSrc, ['scripts-dev', 'jshint', browserSync.reload]);
 
-    // watch for IMAGES changes
-    gulp.watch(imgSrc, ['imagemin-prod', browserSync.reload]);
+  // watch for CSS changes
+  gulp.watch(cssSrc, ['styles-dev', browserSync.reload]);
 
-    // watch for FONT changes
-    gulp.watch(fontSrc, ['fonts', browserSync.reload]);
+  // watch for IMAGES changes
+  gulp.watch(imgSrc, ['imagemin-prod', browserSync.reload]);
 
-    // watch for HTML changes
-    gulp.watch(['*.html']).on('change', function(file) {
-        browserSync.reload();
-    });
+  // watch for FONT changes
+  gulp.watch(fontSrc, ['fonts', browserSync.reload]);
+
+  // watch for HTML changes
+  gulp.watch(['*.html']).on('change', function(file) {
+    browserSync.reload();
+  });
 });
 
 // Production task
-gulp.task('prod',['styles-prod', 'scripts-prod', 'imagemin-prod', 'fonts'], function() {
+gulp.task('prod', ['styles-prod', 'scripts-prod', 'imagemin-prod', 'fonts'], function() {
   server.start();
 });

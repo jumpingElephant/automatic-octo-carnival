@@ -43,12 +43,14 @@
         <table id="consumption-table" class="table table-hover table-bordered">
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th>Kilometerstand</th>
                     <th>Datum</th>
+                    <th>Kilometerstand</th>
+                    <th>Distanz</th>
+                    <th>Preis je Liter</th>
                     <th>Kosten</th>
                 </tr>
             </thead>
+            <tbody></tbody>
         </table>
 
         <nav aria-label="table navigation">
@@ -82,6 +84,8 @@
     <!-- Load scripts -->
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/moment/moment.js"></script>
+    <script src="bower_components/moment/locale/de.js"></script>
     <script src="bower_components/tether/dist/js/tether.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <script src="bower_components/handlebars/handlebars.js"></script>
@@ -91,10 +95,11 @@
         <tbody>
             {{#bills}}
             <tr>
-                <td>{{index}}</td>
+                <td>{{dateFormat date 'L'}}</td>
                 <td>{{mileage}} km</td>
-                <td>{{date}}</td>
-                <td>{{totalPrice}} €</td>
+                <td>{{distance}} km</td>
+                <td>{{numberFormat pricePerLiter digits=3}} €</td>
+                <td>{{numberFormat price digits=2}} €</td>
             </tr>
             {{/bills}}
         </tbody>
