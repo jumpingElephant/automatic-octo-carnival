@@ -42,8 +42,7 @@
 
     <div class="container">
         <!-- Example row of columns -->
-        <table class="uk-table uk-table-striped uk-table-hover">
-            <caption>cap</caption>
+        <table id="consumption-table" class="uk-table uk-table-striped uk-table-hover">
             <thead>
                 <tr>
                     <th>Datum</th>
@@ -51,21 +50,18 @@
                     <th>Kosten</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td class="uk-table-link"><a class="uk-link-reset" onclick="console.log('row 1')">01.01.2017</a></td>
-                    <td class="uk-table-link"><a class="uk-link-reset" onclick="console.log('row 1')">42 km</a></td>
-                    <td class="uk-table-link"><a class="uk-link-reset" onclick="console.log('row 1')">42 €</a></td>
-                </tr>
-                <tr>
-                    <td class="uk-table-link"><a class="uk-link-reset" onclick="console.log('row 2')">02.01.2017</a></td>
-                    <td class="uk-table-link"><a class="uk-link-reset" onclick="console.log('row 2')">43 km</a></td>
-                    <td class="uk-table-link"><a class="uk-link-reset" onclick="console.log('row 2')">43 €</a></td>
-                </tr>
-            </tbody>
         </table>
 
-        <hr>
+        <ul class="uk-pagination uk-flex-left">
+            <li><a href="#"><span uk-pagination-previous></span></a></li>
+            <li class="uk-active"><span>1</span></li>
+            <li><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+            <li><a href="#"><span uk-pagination-next></span></a></li>
+        </ul>
+
+        <hr/>
 
         <footer>
             <p>&copy; jumpingElephant 2017</p>
@@ -81,6 +77,14 @@
     <script src="bower_components/uikit/dist/js/uikit-icons.js"></script>
     <!-- endbower -->
     <script type="text/javascript" src="assets/js/libs.js"></script>
+
+    <script id="consumption-row-template" type="text/x-custom-template">
+        <tr>
+            <td class="uk-table-link"><a class="uk-link-reset" onclick="console.log('row 1')">01.01.2017</a></td>
+            <td class="uk-table-link"><a class="uk-link-reset" onclick="console.log('row 1')">42 km</a></td>
+            <td class="uk-table-link"><a class="uk-link-reset" onclick="console.log('row 1')">42 €</a></td>
+        </tr>
+    </script>
 </body>
 
 </html>
