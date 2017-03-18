@@ -14,6 +14,11 @@
     Handlebars.registerHelper("numberFormat", function(value, digits) {
       return value.toFixed(digits.hash.digits);
     });
+    Handlebars.registerHelper("pageitem", function(index, active) {
+      var paginationItemTemplate = Handlebars.compile($("#pagination-item-template").html());
+      var r = paginationItemTemplate({ index: index, display: index + 1, active: active });
+      return r;
+    });
 
     $.getJSON('rest/consumption', function(bills) {
       console.log('got it');
@@ -33,7 +38,18 @@
     });
 
     $('#page-navigation').on("click", ".pagination li.page-item", function(e) {
-      updateView({ currentPage: 1 })
+      var gotocmd = $(e.currentTarget).data('goto');
+      if (typeof gotocmd === "number") {
+        updateView({ currentPage: gotocmd })
+      } else {
+        var currentPage = $(e.currentTarget).parent().find('li.active').first().data('goto');
+        if (gotocmd === "next") {
+          currentPage = Math.min(currentPage + 1, Math.ceil(model.bills.length / VISIBLE_ROWS) - 1);
+        } else if (gotocmd === "previous") {
+          currentPage = Math.max(currentPage - 1, 0);
+        }
+        updateView({ currentPage: currentPage });
+      }
     });
 
   });
@@ -57,16 +73,15 @@
 
   function updatePagination(data) {
     var pageNavigation = $('#page-navigation');
-    var source = $("#pagination-template").html();
-    var template = Handlebars.compile(source);
+    var paginationTemplate = Handlebars.compile($("#pagination-template").html());
 
     var pages = [];
     var totalPages = Math.ceil(model.bills.length / VISIBLE_ROWS);
     for (var i = 0; i < totalPages; i++) {
-      pages.push({ display: i + 1, active: i == data.currentPage });
+      pages.push({ index: i, display: i + 1, active: i == data.currentPage });
     }
 
-    var substitute = template({ pages: pages });
+    var substitute = paginationTemplate({ pages: pages });
     pageNavigation.find('ul').replaceWith(substitute);
   }
 
