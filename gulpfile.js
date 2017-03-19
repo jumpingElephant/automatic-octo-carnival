@@ -14,8 +14,7 @@ var jshint = require('gulp-jshint'),
   browserSync = require("browser-sync"),
   wiredep = require('wiredep').stream,
   path = require('path'),
-  url = require('url'),
-  proxy = require('proxy-middleware');
+  httpProxy = require('http-proxy-middleware');
 
 var request = require('request');
 var fs = require('fs');
@@ -37,13 +36,15 @@ var bowerDest = 'libs';
 /*Connecting BrowserSync ...*/
 var server = {
   start: function() {
-    var proxyOptions = url.parse('http://localhost:8012/rest');
-    proxyOptions.route = '/rest';
+    var restProxy = httpProxy('/rest', {
+      target: 'http://localhost:8012',
+      logLevel: 'info'
+    });
 
     browserSync({
       server: {
         baseDir: "./",
-        middleware: [proxy(proxyOptions)]
+        middleware: [restProxy]
       }
     });
   }
