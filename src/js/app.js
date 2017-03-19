@@ -20,6 +20,40 @@
       return r;
     });
 
+    $('#new-entry-btn').on('click', function() {
+      console.log('create new entry')
+    });
+
+    $('#consumption-table').on('click', 'tr td button.btn-danger', function(e) {
+      var id = $(e.currentTarget).data('id');
+      if (id) {
+        $.ajax({ url: 'rest/consumption/' + id, type: 'DELETE' })
+          .done(function(data) {
+            console.log(id);
+            loadData();
+          });
+      }
+    });
+
+    $('#page-navigation').on('click', '.pagination li.page-item', function(e) {
+      var gotocmd = $(e.currentTarget).data('goto');
+      if (typeof gotocmd === "number") {
+        updateView({ currentPage: gotocmd })
+      } else {
+        var currentPage = $(e.currentTarget).parent().find('li.active').first().data('goto');
+        if (gotocmd === "next") {
+          currentPage = Math.min(currentPage + 1, Math.ceil(model.bills.length / VISIBLE_ROWS) - 1);
+        } else if (gotocmd === "previous") {
+          currentPage = Math.max(currentPage - 1, 0);
+        }
+        updateView({ currentPage: currentPage });
+      }
+    });
+
+    loadData();
+  });
+
+  function loadData() {
     $.getJSON('rest/consumption', function(bills) {
       console.log('got it');
       bills.sort(function(bill1, bill2) {
@@ -36,27 +70,7 @@
       model.bills = bills;
       updateView({ currentPage: 0 });
     });
-
-    $('#new-entry-btn').on('click', function() {
-      console.log('create new entry')
-    });
-
-    $('#page-navigation').on("click", ".pagination li.page-item", function(e) {
-      var gotocmd = $(e.currentTarget).data('goto');
-      if (typeof gotocmd === "number") {
-        updateView({ currentPage: gotocmd })
-      } else {
-        var currentPage = $(e.currentTarget).parent().find('li.active').first().data('goto');
-        if (gotocmd === "next") {
-          currentPage = Math.min(currentPage + 1, Math.ceil(model.bills.length / VISIBLE_ROWS) - 1);
-        } else if (gotocmd === "previous") {
-          currentPage = Math.max(currentPage - 1, 0);
-        }
-        updateView({ currentPage: currentPage });
-      }
-    });
-
-  });
+  }
 
   function updateView(data) {
     updateTable(data);
