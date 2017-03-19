@@ -37,6 +37,10 @@
       updateView({ currentPage: 0 });
     });
 
+    $('#new-entry-btn').on('click', function() {
+      console.log('create new entry')
+    });
+
     $('#page-navigation').on("click", ".pagination li.page-item", function(e) {
       var gotocmd = $(e.currentTarget).data('goto');
       if (typeof gotocmd === "number") {
