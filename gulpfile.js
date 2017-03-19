@@ -29,7 +29,7 @@ var jsSrc = ['libs/*.js', 'src/js/libs/*.js', 'src/js/*.js'],
   jsDst = 'assets/js/';
 var cssSrc = ['libs/*.css', 'src/css/libs/*.css', 'src/css/**/*.css', 'src/css/*.css'],
   cssDst = './assets/css/';
-var fontSrc = 'src/fonts/*',
+var fontSrc = ['./assets/fonts/', 'bower_components/components-font-awesome/fonts/*'],
   fontDst = './assets/fonts/';
 
 var bowerDest = 'libs';

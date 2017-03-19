@@ -16,6 +16,7 @@
     "bootstrap": "v4.0.0-alpha.6",
     "tether": "^1.4.0",
     "handlebars": "^4.0.5",
-    "moment": "^2.17.1"
+    "moment": "^2.17.1",
+    "font-awesome": "fontawesome#^4.7.0"
   }
 }
