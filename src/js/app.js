@@ -20,6 +20,8 @@
       return r;
     });
 
+    loadData();
+
     $('#new-entry-btn').on('click', function() {
       console.log('create new entry')
     });
@@ -50,7 +52,10 @@
       }
     });
 
-    loadData();
+    $('#entryModal #submitButton').on('click', function() {
+      console.log(arguments[0]);
+    });
+
   });
 
   function loadData() {
@@ -71,6 +76,20 @@
       updateView({ currentPage: 0 });
     });
   }
+
+  $(document).ready(function() {
+    $('#entryModal').on('show.bs.modal', function(event) {
+      var button = $(event.relatedTarget);
+      var mode = button.data('mode');
+      var modal = $(this)
+      if (mode === 'create') {
+        modal.find('.modal-title').text('Neuer Eintrag');
+        modal.find('.modal-body #dateInput').val(new Date());
+        modal.find('.modal-body #mileageInput').val(42);
+        modal.find('#submitButton').text('Erstellen');
+      }
+    });
+  });
 
   function updateView(data) {
     updateTable(data);

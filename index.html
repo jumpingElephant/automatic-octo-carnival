@@ -37,13 +37,14 @@
             <h1>Hallo, Alex!</h1>
         </div>
     </div>
+
     <div class="container">
 
         <div class="card text-center">
             <div class="card-header">
                 <ul class="nav nav-pills card-header-pills">
                     <li class="nav-item">
-                        <a id="new-entry-btn" class="nav-link active action"><span class="fa fa-plus"></span><span> Neuer Eintrag</span></a>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#entryModal" data-mode="create">Neuer Eintrag</button>
                     </li>
                 </ul>
             </div>
@@ -76,6 +77,51 @@
     </footer>
     </div>
 
+
+    <div class="modal fade" id="entryModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form novalidate>
+                        <div class="form-group row">
+                            <label class="col-3 col-form-label">Datum</label>
+                            <div class="col-9">
+                                <input type="date" class="form-control" id="dateInput" placeholder="Datum">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-3 col-form-label">Kilometerstand</label>
+                            <div class="col-9">
+                                <input type="number" class="form-control" id="mileageInput" placeholder="Kilometerstand">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-3 col-form-label">Füllmenge</label>
+                            <div class="col-9">
+                                <input type="number" class="form-control" id="quantityInput" placeholder="Füllmenge">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-3 col-form-label">Gesamtpreis</label>
+                            <div class="col-9">
+                                <input type="number" class="form-control" id="priceInput" placeholder="Gesamtpreis">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+                    <button type="button" class="btn btn-primary" id="submitButton">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Load scripts -->
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
