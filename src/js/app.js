@@ -11,8 +11,14 @@
       var format = formatOption || 'LLLL';
       return moment(date).format(format);
     });
-    Handlebars.registerHelper("numberFormat", function(value, digits) {
-      return value.toFixed(digits.hash.digits);
+    Handlebars.registerHelper("numberFormat", function(value, formatOption) {
+      if (value) {
+        var text = value.toFixed(formatOption.hash.digits);
+        if (formatOption.hash.postfix) {
+          text += " " + formatOption.hash.postfix;
+        }
+        return text;
+      }
     });
     Handlebars.registerHelper("pageitem", function(index, active) {
       var paginationItemTemplate = Handlebars.compile($("#pagination-item-template").html());
@@ -21,10 +27,6 @@
     });
 
     loadData();
-
-    $('#new-entry-btn').on('click', function() {
-      console.log('create new entry')
-    });
 
     $('#consumption-table').on('click', 'tr td button.btn-danger', function(e) {
       var id = $(e.currentTarget).data('id');
@@ -54,11 +56,39 @@
 
     $('#entryModal #submitButton').on('click', function() {
       console.log(arguments[0]);
+      var date = $('#dateInput').val();
+      var mileage = $('#mileageInput').val();
+      var quantity = $('#quantityInput').val();
+      var price = $('#priceInput').val();
+      var entry = {
+        date: moment(date, 'DD.MM.YYYY'),
+        mileage: mileage,
+        quantity: quantity,
+        price: price
+      };
+      $('#alert-container').empty();
+      $.post({
+        url: 'rest/consumption',
+        data: JSON.stringify(entry),
+        dataType: 'json'
+      }).done(function(msg) {
+        $('#entryModal').modal('hide');
+        loadData();
+      }).fail(function(response) {
+        var error = JSON.parse(response.responseText).error;
+        $('#alert-container').append(createAlert({ summary: error.message }))
+      });
     });
 
+    $('#mileageInput').keyup(function(e) {
+      var mileage = Number.parseInt($(e.currentTarget).val());
+      if (mileage) {
+        $('#currentDistance').text(mileage - model.bills[0].mileage);
+      }
+    });
   });
 
-  function loadData() {
+  function loadData(currentPage) {
     $.getJSON('rest/consumption', function(bills) {
       console.log('got it');
       bills.sort(function(bill1, bill2) {
@@ -73,7 +103,7 @@
           return bill;
         });
       model.bills = bills;
-      updateView({ currentPage: 0 });
+      updateView({ currentPage: currentPage || 0 });
     });
   }
 
@@ -84,10 +114,15 @@
       var modal = $(this)
       if (mode === 'create') {
         modal.find('.modal-title').text('Neuer Eintrag');
-        modal.find('.modal-body #dateInput').val(new Date());
+        modal.find('.modal-body #dateInput').val(moment().format('DD.MM.YYYY'));
         modal.find('.modal-body #mileageInput').val(42);
         modal.find('#submitButton').text('Erstellen');
       }
+      if (model.bills[0]) {
+        $('#lastEntryMileage').text(model.bills[0].mileage);
+      }
+      $('#currentDistance').text('-');
+      modal.find('#dateInput').attr('max', moment().format('YYYY-MM-DD'));
     });
   });
 
@@ -120,6 +155,11 @@
 
     var substitute = paginationTemplate({ pages: pages });
     pageNavigation.find('ul').replaceWith(substitute);
+  }
+
+  function createAlert(msg) {
+    var alertTemplate = Handlebars.compile($("#alert-template").html());
+    return alertTemplate(msg);
   }
 
 })(jQuery, window, document);
