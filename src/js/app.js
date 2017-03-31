@@ -42,7 +42,7 @@
     $('#page-navigation').on('click', '.pagination li.page-item', function(e) {
       var gotocmd = $(e.currentTarget).data('goto');
       if (typeof gotocmd === "number") {
-        updateView({ currentPage: gotocmd })
+        updateView({ currentPage: gotocmd });
       } else {
         var currentPage = $(e.currentTarget).parent().find('li.active').first().data('goto');
         if (gotocmd === "next") {
@@ -76,7 +76,7 @@
         loadData();
       }).fail(function(response) {
         var error = JSON.parse(response.responseText).error;
-        $('#alert-container').append(createAlert({ summary: error.message }))
+        $('#alert-container').append(createAlert({ summary: error.message }));
       });
     });
 
@@ -111,7 +111,7 @@
     $('#entryModal').on('show.bs.modal', function(event) {
       var button = $(event.relatedTarget);
       var mode = button.data('mode');
-      var modal = $(this)
+      var modal = $(this);
       if (mode === 'create') {
         modal.find('.modal-title').text('Neuer Eintrag');
         modal.find('.modal-body #dateInput').val(moment().format('DD.MM.YYYY'));

@@ -1,168 +1,79 @@
-// include gulp
 var gulp = require('gulp');
+var browserSync = require('browser-sync').create();
+var reload = browserSync.reload;
+var plumber = require('gulp-plumber');
+var csslint = require('gulp-csslint');
+var autoPrefixer = require('gulp-autoprefixer');
+//if node version is lower than v.0.1.2
+require('es6-promise').polyfill();
+var cssComb = require('gulp-csscomb');
+var cmq = require('gulp-merge-media-queries');
+var jshint = require('gulp-jshint');
+var concat = require('gulp-concat');
+var wiredep = require('wiredep').stream;
+var useref = require('gulp-useref');
+var httpProxy = require('http-proxy-middleware');
+var gulpIf = require('gulp-if');
+var uglify = require('gulp-uglify');
+var minifyCss = require('gulp-minify-css');
+var del = require('del');
+var htmlValidator = require('gulp-html');
 
-// include plug-ins
-var jshint = require('gulp-jshint'),
-  changed = require('gulp-changed'),
-  imagemin = require('gulp-imagemin'),
-  concat = require('gulp-concat'),
-  stripDebug = require('gulp-strip-debug'),
-  uglify = require('gulp-uglify'),
-  autoprefix = require('gulp-autoprefixer'),
-  minifyCSS = require('gulp-minify-css'),
-  rimraf = require('gulp-rimraf'),
-  browserSync = require("browser-sync"),
-  wiredep = require('wiredep').stream,
-  path = require('path'),
-  httpProxy = require('http-proxy-middleware');
+gulp.task('lint', ['lint:jshint', 'lint:css']);
 
-var request = require('request');
-var fs = require('fs');
-
-//Sources
-var htmlSrc = 'assets/*.html',
-  htmlDst = 'assets';
-var imgSrc = 'src/img/**/*',
-  imgDst = 'assets/img';
-var jsSrc = ['libs/*.js', 'src/js/libs/*.js', 'src/js/*.js'],
-  jsDst = 'assets/js/';
-var cssSrc = ['libs/*.css', 'src/css/libs/*.css', 'src/css/**/*.css', 'src/css/*.css'],
-  cssDst = './assets/css/';
-var fontSrc = ['./assets/fonts/', 'bower_components/components-font-awesome/fonts/*'],
-  fontDst = './assets/fonts/';
-
-var bowerDest = 'libs';
-
-/*Connecting BrowserSync ...*/
-var server = {
-  start: function() {
-    var restProxy = httpProxy('/rest', {
-      target: 'http://localhost:8012',
-      logLevel: 'info'
-    });
-
-    browserSync({
-      server: {
-        baseDir: "./",
-        middleware: [restProxy]
-      }
-    });
-  }
-}
-
-/* Bower */
-/* 
-Comannds:
-  $ bower install --save plugin-name
-  $ gulp bower
-*/
-gulp.task('bower', function() {
-  gulp.src('./*.html')
-    .pipe(wiredep())
-    .pipe(gulp.dest('./'));
+gulp.task('lint:css', function() {
+  return gulp.src(['./src/css/**/*.css'])
+    .pipe(csslint())
+    .pipe(csslint.formatter(require('csslint-stylish')));
 });
 
-//Fonts
-gulp.task('fonts', function() {
-  return gulp.src(fontSrc)
-    .pipe(gulp.dest(fontDst));
-});
-
-/*
-================================
-      Gulp development
-================================
-*/
-
-// CSS concat, auto-prefix and minify
-gulp.task('styles-dev', function() {
-  return gulp.src(cssSrc)
-    .pipe(concat('styles.css'))
-    .pipe(gulp.dest(cssDst));
-});
-
-// JS hint task
-gulp.task('jshint', function() {
-  return gulp.src('src/js/')
+gulp.task('lint:jshint', function() {
+  return gulp.src(['./src/js/**/*.js'])
     .pipe(jshint())
-    .pipe(jshint.reporter('default'));
+    .pipe(jshint.reporter('jshint-stylish'));
 });
 
-// JS concat, strip debugging and minify
-gulp.task('scripts-dev', function() {
-  return gulp.src(jsSrc)
-    .pipe(concat('libs.js'))
-    .pipe(gulp.dest(jsDst));
+gulp.task('lint:html', function() {
+  return gulp.src(['./*.html'])
+    .pipe(htmlValidator());
 });
 
-//Minify images
-gulp.task('imagemin-dev', function() {
-  return gulp.src(imgSrc)
-    .pipe(changed(imgDst))
-    .pipe(gulp.dest(imgDst));
+gulp.task('bower', function() {
+  return gulp.src(['./*.html'])
+    .pipe(wiredep())
+    .pipe(gulp.dest('./tmp'));
 });
 
-/*
-================================
-      Gulp production
-================================
-*/
-
-// Deletes the assets folder
-gulp.task('clean', function(cb) {
-  return gulp.src('./assets')
-    .pipe(rimraf({ force: true }));
-});
-
-// CSS concat, auto-prefix and minify
-gulp.task('styles-prod', function() {
-  return gulp.src(cssSrc)
-    .pipe(concat('styles.css'))
-    .pipe(autoprefix('last 2 versions'))
-    .pipe(minifyCSS())
-    .pipe(gulp.dest(cssDst));
-});
-
-// JS  striping the console, concatenate and uglify it
-gulp.task('scripts-prod', function() {
-  return gulp.src(jsSrc)
-    .pipe(concat('libs.js'))
-    .pipe(stripDebug())
-    .pipe(uglify())
-    .pipe(gulp.dest(jsDst));
-});
-
-//Minify images
-gulp.task('imagemin-prod', function() {
-  return gulp.src(imgSrc)
-    .pipe(changed(imgDst))
-    .pipe(imagemin())
-    .pipe(gulp.dest(imgDst));
-});
-
-// Development task
-gulp.task('default', ['styles-dev', 'jshint', 'scripts-dev', 'imagemin-dev', 'fonts'], function() {
-  server.start();
-
-  // watch for JS changes
-  gulp.watch(jsSrc, ['scripts-dev', 'jshint', browserSync.reload]);
-
-  // watch for CSS changes
-  gulp.watch(cssSrc, ['styles-dev', browserSync.reload]);
-
-  // watch for IMAGES changes
-  gulp.watch(imgSrc, ['imagemin-prod', browserSync.reload]);
-
-  // watch for FONT changes
-  gulp.watch(fontSrc, ['fonts', browserSync.reload]);
-
-  // watch for HTML changes
-  gulp.watch(['*.html']).on('change', function(file) {
-    browserSync.reload();
+gulp.task('default', function() {
+  var restProxy = httpProxy('/rest', {
+    target: 'http://localhost:8012',
+    logLevel: 'info'
   });
+
+  browserSync.init({
+    server: {
+      baseDir: './',
+      middleware: [restProxy]
+    }
+  });
+  gulp.watch('./src/js/**/*.js', ['js']);
+  gulp.watch('./src/css/**/*.css', ['css']);
+  gulp.watch('.//**/*.html', ['html']);
+  gulp.watch('./src/images/**/*', ['image']);
 });
 
-// Production task
-gulp.task('prod', ['styles-prod', 'scripts-prod', 'imagemin-prod', 'fonts'], function() {
-  server.start();
+gulp.task('clean', ['clean:tmp'], function() {
+  return del(['./dist']);
+});
+
+gulp.task('clean:tmp', function() {
+  return del(['./tmp']);
+});
+
+gulp.task('build', ['clean'], function() {
+  return gulp.src(['./*.html'])
+    .pipe(useref())
+    .pipe(gulpIf('*.js', uglify()))
+    .pipe(gulpIf('*.css', minifyCss()))
+    .pipe(gulp.dest('./dist'));
 });
