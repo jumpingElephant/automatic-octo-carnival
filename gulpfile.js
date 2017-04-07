@@ -27,6 +27,11 @@ gulp.task('lint:css', function() {
     .pipe(csslint.formatter(require('csslint-stylish')));
 });
 
+gulp.task('fonts', function() {
+  return gulp.src(['./bower_components/font-awesome/fonts/fontawesome-webfont.*'])
+    .pipe(gulp.dest('dist/fonts/'));
+});
+
 gulp.task('lint:jshint', function() {
   return gulp.src(['./src/js/**/*.js'])
     .pipe(jshint())
@@ -72,7 +77,7 @@ gulp.task('clean:tmp', function() {
   return del(['./tmp']);
 });
 
-gulp.task('build', ['clean'], function() {
+gulp.task('build', ['clean', 'fonts'], function() {
   return gulp.src(['./*.html'])
     .pipe(useref())
     .pipe(gulpIf('*.js', uglify()))
