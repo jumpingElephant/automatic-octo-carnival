@@ -47,8 +47,9 @@
                             <th>Datum</th>
                             <th>Kilometerstand</th>
                             <th>Distanz</th>
-                            <th>Preis je Liter</th>
+                            <th>Füllmenge</th>
                             <th>Kosten</th>
+                            <th>Preis je Liter</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -139,8 +140,9 @@
                 <td>{{dateFormat date 'L'}}</td>
                 <td>{{numberFormat mileage digits=0 postfix='km'}}</td>
                 <td>{{numberFormat distance digits=0 postfix='km'}}</td>
-                <td>{{numberFormat pricePerLiter digits=3 postfix='€'}}</td>
+                <td>{{numberFormat quantity digits=2 postfix='€'}}</td>
                 <td>{{numberFormat price digits=2 postfix='€'}}</td>
+                <td>{{numberFormat pricePerLiter digits=3 postfix='l'}}</td>
                 <td style="padding: 0.225em" class="action">
                     <button class="btn btn-danger btn-sm" type="submit" title="Eintrag Löschen" data-id="{{mileage}}">
                         <span class="fa fa-trash fa-sm"></span>
