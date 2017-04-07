@@ -56,10 +56,12 @@ gulp.task('default', function() {
       middleware: [restProxy]
     }
   });
-  gulp.watch('./src/js/**/*.js', ['js']);
-  gulp.watch('./src/css/**/*.css', ['css']);
-  gulp.watch('.//**/*.html', ['html']);
-  gulp.watch('./src/images/**/*', ['image']);
+  gulp.watch('./src/js/**/*.js', [browserSync.reload]);
+  gulp.watch('./src/css/**/*.css', [browserSync.reload]);
+  gulp.watch('.//**/*.html').on('change', function(file) {
+    browserSync.reload();
+  });
+  gulp.watch('./src/images/**/*', [browserSync.reload]);
 });
 
 gulp.task('clean', ['clean:tmp'], function() {
