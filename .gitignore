@@ -5,3 +5,4 @@ libs
 assets
 dist
 tmp
+/publish.sh
