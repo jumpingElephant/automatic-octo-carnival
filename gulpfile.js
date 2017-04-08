@@ -27,9 +27,21 @@ gulp.task('lint:css', function() {
     .pipe(csslint.formatter(require('csslint-stylish')));
 });
 
-gulp.task('fonts', function() {
+gulp.task('images:all', ['images', 'images:favicon']);
+
+gulp.task('images', function() {
+  return gulp.src(['.src/images/**/*'])
+    .pipe(gulp.dest('./dist/images/'));
+});
+
+gulp.task('images:favicon', function() {
+  return gulp.src(['./favicon.ico'])
+    .pipe(gulp.dest('./dist/'));
+});
+
+gulp.task('fonts:fontawesome', function() {
   return gulp.src(['./bower_components/font-awesome/fonts/fontawesome-webfont.*'])
-    .pipe(gulp.dest('dist/fonts/'));
+    .pipe(gulp.dest('./dist/fonts/'));
 });
 
 gulp.task('lint:jshint', function() {
@@ -77,7 +89,7 @@ gulp.task('clean:tmp', function() {
   return del(['./tmp']);
 });
 
-gulp.task('build', ['clean', 'fonts'], function() {
+gulp.task('build', ['clean', 'fonts:fontawesome', 'images:all'], function() {
   return gulp.src(['./*.html'])
     .pipe(useref())
     .pipe(gulpIf('*.js', uglify()))
