@@ -11,22 +11,12 @@ Run this from the project root path
 npm install && bower install
 ```
 
-To set the **development** mode, which is the default, run this in the current project root path
-```
-gulp dev
-```
-or simply
+To invoke Gulp with browser-sync while developing, run Gulp with default task
 ```
 gulp
 ```
 
-To set the **production** mode, run this in the current project root path
+To build the app in *dist* folder for production run
 ```
-gulp prod
+gulp build
 ```
-
-To **clean** the assets folder
-```
-gulp clean
-```
-
