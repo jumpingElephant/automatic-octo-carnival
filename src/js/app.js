@@ -26,6 +26,7 @@
       return r;
     });
 
+    loadCarSelection();
     loadData();
 
     $('#consumption-table').on('click', 'tr td button.btn-danger', function(e) {
@@ -88,8 +89,19 @@
     });
   });
 
+  function loadCarSelection() {
+    $.getJSON('rest/consumption', function(cars) {
+      var carSelection = $('#car-selection');
+      var source = $('#car-template').html();
+      var template = Handlebars.compile(source);
+
+      var substitute = template({ cars: cars });
+      carSelection.replaceWith(substitute);
+    });
+  }
+
   function loadData(currentPage) {
-    $.getJSON('rest/consumption', function(bills) {
+    $.getJSON('rest/consumption/Audi_A3', function(bills) {
       console.log('got it');
       bills.sort(function(bill1, bill2) {
           return bill2.mileage - bill1.mileage;

@@ -31,6 +31,10 @@
     </div>
 
     <div class="container">
+        <div style="display: none;">
+            <div id="car-selection">
+            </div>
+        </div>
 
         <div class="card text-center">
             <div class="card-header">
@@ -151,6 +155,23 @@
             </tr>
             {{/bills}}
         </tbody>
+    </script>
+    <script id="car-template" type="text/x-handlebars-template">
+        <div class="d-flex flex-wrap">
+            {{#cars}}
+            <a style="color: white" class="btn btn-primary btn-lg" role="button" data-automobileId="{{automobileId}}">
+                <div>
+                    <h1>{{displayName}}</h1>
+                    <i class="fa fa-3x fa-car"></i>
+                </div>
+            </a>
+            {{/cars}}
+            <a style="color: white" class="btn btn-primary btn-lg" role="button">
+                <div>
+                    <i class="fa fa-3x fa-plus"></i>
+                </div>
+            </a>
+        </div>
     </script>
     <script id="pagination-template" type="text/x-handlebars-template">
         <ul class="pagination">
