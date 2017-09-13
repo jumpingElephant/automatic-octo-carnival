@@ -32,7 +32,7 @@
     $('#consumption-table').on('click', 'tr td button.btn-danger', function(e) {
       var id = $(e.currentTarget).data('id');
       if (id) {
-        $.ajax({ url: 'rest/consumption/' + id, type: 'DELETE' })
+        $.ajax({ url: 'api/consumption/Audi_A3/' + id, type: 'DELETE' })
           .done(function(data) {
             console.log(id);
             loadData();
@@ -62,14 +62,14 @@
       var quantity = $('#quantityInput').val();
       var price = $('#priceInput').val();
       var entry = {
-        date: moment(date, 'DD.MM.YYYY'),
+        date: moment(date, 'DD.MM.YYYY').format('YYYY-MM-DD'),
         mileage: mileage,
         quantity: quantity,
         price: price
       };
       $('#alert-container').empty();
       $.post({
-        url: 'rest/consumption',
+        url: 'api/consumption/Audi_A3',
         data: JSON.stringify(entry),
         dataType: 'json'
       }).done(function(msg) {
@@ -90,7 +90,7 @@
   });
 
   function loadCarSelection() {
-    $.getJSON('rest/consumption', function(cars) {
+    $.getJSON('api/consumption', function(cars) {
       var carSelection = $('#car-selection');
       var source = $('#car-template').html();
       var template = Handlebars.compile(source);
@@ -101,7 +101,7 @@
   }
 
   function loadData(currentPage) {
-    $.getJSON('rest/consumption/Audi_A3', function(bills) {
+    $.getJSON('api/consumption/Audi_A3', function(bills) {
       console.log('got it');
       bills.sort(function(bill1, bill2) {
           return bill2.mileage - bill1.mileage;

@@ -63,7 +63,7 @@ gulp.task('bower', function() {
 
 gulp.task('default', function() {
   var restProxy = httpProxy('/rest', {
-    target: 'http://localhost:8012',
+    target: 'http://localhost:4567',
     logLevel: 'info'
   });
 
