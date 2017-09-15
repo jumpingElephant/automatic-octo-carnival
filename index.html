@@ -52,6 +52,7 @@
                             <th>Kilometerstand</th>
                             <th>Distanz</th>
                             <th>Füllmenge</th>
+                            <th title="Verbrauch je 100 km">Verbrauch</th>
                             <th>Kosten</th>
                             <th>Preis je Liter</th>
                         </tr>
@@ -145,6 +146,7 @@
                 <td>{{numberFormat mileage digits=0 postfix='km'}}</td>
                 <td>{{numberFormat distance digits=0 postfix='km'}}</td>
                 <td>{{numberFormat quantity digits=2 postfix='l'}}</td>
+                <td>{{numberFormat literPerCentum digits=2 postfix='l'}}</td>
                 <td>{{numberFormat price digits=2 postfix='€'}}</td>
                 <td>{{numberFormat pricePerLiter digits=3 postfix='€'}}</td>
                 <td style="padding: 0.225em" class="action">

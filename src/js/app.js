@@ -125,6 +125,7 @@
           bill.date = new Date(bill.date);
           if (index < data.length - 1) {
             bill.distance = bill.mileage - data[index + 1].mileage;
+            bill.literPerCentum = bill.quantity * 100 / bill.distance;
           }
           bill.pricePerLiter = bill.price / bill.quantity;
           return bill;
