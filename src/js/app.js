@@ -55,31 +55,7 @@
       }
     });
 
-    $('#entryModal #submitButton').on('click', function() {
-      console.log(arguments[0]);
-      var date = $('#dateInput').val();
-      var mileage = $('#mileageInput').val();
-      var quantity = $('#quantityInput').val();
-      var price = $('#priceInput').val();
-      var entry = {
-        date: moment(date, 'DD.MM.YYYY').format('YYYY-MM-DD'),
-        mileage: mileage,
-        quantity: quantity,
-        price: price
-      };
-      $('#alert-container').empty();
-      $.post({
-        url: 'api/consumption/Audi_A3',
-        data: JSON.stringify(entry),
-        dataType: 'json'
-      }).done(function(msg) {
-        $('#entryModal').modal('hide');
-        loadData();
-      }).fail(function(response) {
-        var error = JSON.parse(response.responseText).error;
-        $('#alert-container').append(createAlert({ summary: error.message }));
-      });
-    });
+    $('#entryModal #submitButton').on('click', saveBill);
 
     $('#mileageInput').keyup(function(e) {
       var mileage = Number.parseInt($(e.currentTarget).val());
@@ -87,7 +63,46 @@
         $('#currentDistance').text(mileage - model.bills[0].mileage);
       }
     });
+    $('#entryModal input').keyup(function(event) {
+      if (event.keyCode === 13) {
+        saveBill();
+      }
+    });
   });
+
+  function saveBill() {
+    var dateString = $('#dateInput').val();
+    var mileage = $('#mileageInput').val();
+    var quantity = $('#quantityInput').val();
+    var price = $('#priceInput').val();
+
+    var date = moment(dateString);
+    if (!date.isValid()) {
+      date = moment(dateString, 'DD.MM.YYYY');
+    }
+    if (!date.isValid()) {
+      console.error('failed to parse dateString');
+    }
+
+    var entry = {
+      date: date.format('YYYY-MM-DD'),
+      mileage: mileage,
+      quantity: quantity,
+      price: price
+    };
+    $('#alert-container').empty();
+    $.post({
+      url: 'api/consumption/Audi_A3',
+      data: JSON.stringify(entry),
+      dataType: 'json'
+    }).done(function(msg) {
+      $('#entryModal').modal('hide');
+      loadData();
+    }).fail(function(response) {
+      var error = JSON.parse(response.responseText).error;
+      $('#alert-container').append(createAlert({ summary: error.message }));
+    });
+  }
 
   function loadCarSelection() {
     $.getJSON('api/consumption', function(cars) {
@@ -127,7 +142,9 @@
       if (mode === 'create') {
         modal.find('.modal-title').text('Neuer Eintrag');
         modal.find('.modal-body #dateInput').val(moment().format('DD.MM.YYYY'));
-        modal.find('.modal-body #mileageInput').val(42);
+        modal.find('.modal-body #mileageInput').val(undefined);
+        modal.find('.modal-body #quantityInput').val(undefined);
+        modal.find('.modal-body #priceInput').val(undefined);
         modal.find('#submitButton').text('Erstellen');
       }
       if (model.bills[0]) {
@@ -135,6 +152,11 @@
       }
       $('#currentDistance').text('-');
       modal.find('#dateInput').attr('max', moment().format('YYYY-MM-DD'));
+    });
+
+    $('#entryModal').on('shown.bs.modal', function(event) {
+      document.getElementById('dateInput').focus();
+      document.getElementById('dateInput').select();
     });
   });
 
