@@ -63,6 +63,14 @@
         $('#currentDistance').text(mileage - model.bills[0].mileage);
       }
     });
+    $('#quantityInput, #priceInput').keyup(function(event) {
+      var quantity = Number.parseInt($('#quantityInput').val());
+      var price = Number.parseInt($('#priceInput').val());
+      if (isFinite(quantity) && isFinite(price)) {
+        var text = (price / quantity).toFixed(2);
+        $('#pricePerLiter').val(text + ' €/l');
+      }
+    });
     $('#entryModal input').keyup(function(event) {
       if (event.keyCode === 13) {
         saveBill();

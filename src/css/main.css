@@ -1,3 +1,10 @@
-.container .action :hover {
-	cursor: pointer;
+.container .action:hover {
+    cursor: pointer;
+}
+
+.no-copy {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
