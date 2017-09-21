@@ -8,3 +8,23 @@
     -ms-user-select: none;
     user-select: none;
 }
+
+.spinner,.failure {
+	display: none;
+}
+
+.loading .spinner {
+    display: block !important;
+}
+
+.loading-failure .failure {
+    display: block !important;
+}
+
+.loading table {
+    visibility: hidden;
+}
+
+.loading-failure table {
+    visibility: hidden;
+}

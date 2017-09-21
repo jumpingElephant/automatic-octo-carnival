@@ -125,22 +125,30 @@
 
   function loadData(currentPage) {
     $.getJSON('api/consumption/Audi_A3', function(bills) {
-      console.log('got it');
-      bills.sort(function(bill1, bill2) {
-          return bill2.mileage - bill1.mileage;
-        })
-        .map(function(bill, index, data) {
-          bill.date = new Date(bill.date);
-          if (index < data.length - 1) {
-            bill.distance = bill.mileage - data[index + 1].mileage;
-            bill.literPerCentum = bill.quantity * 100 / bill.distance;
-          }
-          bill.pricePerLiter = bill.price / bill.quantity;
-          return bill;
-        });
-      model.bills = bills;
-      updateView({ currentPage: currentPage || 0 });
-    });
+
+        bills.sort(function(bill1, bill2) {
+            return bill2.mileage - bill1.mileage;
+          })
+          .map(function(bill, index, data) {
+            bill.date = new Date(bill.date);
+            if (index < data.length - 1) {
+              bill.distance = bill.mileage - data[index + 1].mileage;
+              bill.literPerCentum = bill.quantity * 100 / bill.distance;
+            }
+            bill.pricePerLiter = bill.price / bill.quantity;
+            return bill;
+          });
+        model.bills = bills;
+        updateView({ currentPage: currentPage || 0 });
+      })
+      .fail(function() {
+        var tableContainer = $('#table-cntr');
+        tableContainer.addClass('loading-failure');
+      })
+      .always(function() {
+        var tableContainer = $('#table-cntr');
+        tableContainer.removeClass('loading');
+      });
   }
 
   $(document).ready(function() {
