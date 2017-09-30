@@ -6,3 +6,4 @@ assets
 dist
 tmp
 /publish.sh
+/automatic-octo-carnival.sublime-*
