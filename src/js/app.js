@@ -34,7 +34,6 @@
       if (id) {
         $.ajax({ url: 'api/consumption/Audi_A3/' + id, type: 'DELETE' })
           .done(function(data) {
-            console.log(id);
             loadData();
           });
       }
@@ -64,10 +63,10 @@
       }
     });
     $('#quantityInput, #priceInput').keyup(function(event) {
-      var quantity = Number.parseInt($('#quantityInput').val());
-      var price = Number.parseInt($('#priceInput').val());
+      var quantity = Number.parseFloat($('#quantityInput').val());
+      var price = Number.parseFloat($('#priceInput').val());
       if (isFinite(quantity) && isFinite(price)) {
-        var text = (price / quantity).toFixed(2);
+        var text = (price / quantity).toFixed(3);
         $('#pricePerLiter').val(text + ' €/l');
       }
     });
