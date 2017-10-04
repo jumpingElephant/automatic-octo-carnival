@@ -75,6 +75,33 @@
         saveBill();
       }
     });
+    $('#entryModal #dateInput').keydown(function(event) {
+
+      var dateInput = $('#dateInput');
+      var dateString = dateInput.val();
+
+      var date = moment(dateString);
+      if (!date.isValid()) {
+        date = moment(dateString, 'DD.MM.YYYY');
+      }
+      if (date.isValid()) {
+        var newDate;
+        if (event.key === '-') {
+          newDate = date.subtract(1, 'days');
+        } else if (event.key === '+') {
+          newDate = date.add(1, 'days');
+        }
+        if (newDate) {
+          dateInput.val(newDate.format(nativeDateFormat()));
+          event.preventDefault();
+        }
+      }
+      if (event.key === 'h') {
+        var newDate = moment();
+        dateInput.val(newDate.format(nativeDateFormat()));
+        event.preventDefault();
+      }
+    });
   });
 
   function saveBill() {
@@ -157,7 +184,7 @@
       var modal = $(this);
       if (mode === 'create') {
         modal.find('.modal-title').text('Neuer Eintrag');
-        modal.find('.modal-body #dateInput').val(moment().format('DD.MM.YYYY'));
+        modal.find('.modal-body #dateInput').val(moment().format(nativeDateFormat()));
         modal.find('.modal-body #mileageInput').val(undefined);
         modal.find('.modal-body #quantityInput').val(undefined);
         modal.find('.modal-body #priceInput').val(undefined);
@@ -167,7 +194,6 @@
         $('#lastEntryMileage').text(model.bills[0].mileage);
       }
       $('#currentDistance').text('-');
-      modal.find('#dateInput').attr('max', moment().format('YYYY-MM-DD'));
     });
 
     $('#entryModal').on('shown.bs.modal', function(event) {
@@ -210,6 +236,20 @@
   function createAlert(msg) {
     var alertTemplate = Handlebars.compile($("#alert-template").html());
     return alertTemplate(msg);
+  }
+
+  function isDateSupported() {
+    var i = document.createElement("input");
+    i.setAttribute("type", "date");
+    return i.type !== "text";
+  }
+
+  function nativeDateFormat() {
+    if (isDateSupported()) {
+      return 'YYYY-MM-DD';
+    } else {
+      return 'DD.MM.YYYY';
+    }
   }
 
 })(jQuery, window, document);
