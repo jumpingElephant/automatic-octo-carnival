@@ -32,7 +32,7 @@
     $('#consumption-table').on('click', 'tr td button.btn-danger', function(e) {
       var id = $(e.currentTarget).data('id');
       if (id) {
-        $.ajax({ url: 'api/consumption/Audi_A3/' + id, type: 'DELETE' })
+        $.ajax({ url: 'api/consumption/Audi_A3/bills/' + id, type: 'DELETE' })
           .done(function(data) {
             loadData();
           });
@@ -126,7 +126,7 @@
     };
     $('#alert-container').empty();
     $.post({
-      url: 'api/consumption/Audi_A3',
+      url: 'api/consumption/Audi_A3/bills',
       data: JSON.stringify(entry),
       dataType: 'json'
     }).done(function(msg) {
@@ -150,7 +150,7 @@
   }
 
   function loadData(currentPage) {
-    $.getJSON('api/consumption/Audi_A3', function(bills) {
+    $.getJSON('api/consumption/Audi_A3/bills', function(bills) {
 
         bills.sort(function(bill1, bill2) {
             return bill2.mileage - bill1.mileage;
