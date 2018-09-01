@@ -1,0 +1,27 @@
+.
+├── innerbuilder
+│   ├── META-INF
+│   │   ├── MANIFEST.MF
+│   │   ├── maven
+│   │   │   └── org.jetbrains.plugins
+│   │   │       └── innerbuilder
+│   │   │           ├── pom.properties
+│   │   │           └── pom.xml
+│   │   └── plugin.xml
+│   └── org
+│       └── jetbrains
+│           └── plugins
+│               └── innerbuilder
+│                   ├── InnerBuilderAction.class
+│                   ├── InnerBuilderCollector.class
+│                   ├── InnerBuilderGenerator.class
+│                   ├── InnerBuilderHandler.class
+│                   ├── InnerBuilderOption.class
+│                   ├── InnerBuilderOptionSelector$1.class
+│                   ├── InnerBuilderOptionSelector.class
+│                   ├── InnerBuilderUtils.class
+│                   ├── SelectorOption$1.class
+│                   ├── SelectorOption$Builder.class
+│                   └── SelectorOption.class
+└── innerbuilder.jar
+
